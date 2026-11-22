@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4f1e8" />
+<title>Dearest yao，feeling 22</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&family=Italianno&family=Instrument+Serif:ital@0;1&display=swap" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&family=Italianno&family=Instrument+Serif:ital@0;1&display=swap" /></noscript>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="bg"></div>
+<div class="dot-grid" aria-hidden="true"></div>
+<div class="haze"><i></i><i></i></div>
+<div class="vignette"></div>
+<div class="grain"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- ============ -1 · 拼贴开屏 / 长按许愿 ============ -->
+<section class="screen active" id="intro" aria-label="开场">
+  <div class="paper-bg"></div>
+
+  <div class="intro-frame" id="introFrame">
+    <div class="intro-left">
+      <div class="intro-stage" id="introStage" aria-label="生日拼贴">
+        <span class="scrap-sheet" aria-hidden="true"></span>
+        <span class="scrap-tape tape-tl" aria-hidden="true"></span>
+        <span class="scrap-tape tape-br" aria-hidden="true"></span>
+
+        <!-- first-screen art decodes synchronously: async decoding can leave
+             the largest cut-out (the cake) unpainted on the very first frame -->
+        <img class="layer l-bunting" src="assets/collage/bunting-cut.webp" alt="生日彩旗" />
+        <img class="layer l-happy" src="assets/collage/happy-cut.webp" alt="Happy Birthday" />
+        <img class="layer l-num" data-pop="4" src="assets/collage/num22-cut.webp" alt="手绘的 22" />
+        <img class="layer l-person" data-pop="2" src="assets/collage/portrait-cut.webp" alt="yao" />
+        <img class="layer l-hat" data-pop="3" src="assets/collage/hat-cut.webp" alt="派对帽" />
+        <img class="layer l-cake" data-pop="1" src="assets/collage/cake-cut.webp" alt="生日蛋糕" />
+
+        <figure class="deco mini mini-a" data-note="us ♡" aria-hidden="true">
+          <img src="assets/collage/mini-a.webp" alt="" />
+        </figure>
+        <figure class="deco mini mini-b" data-note="22 ✳" aria-hidden="true">
+          <img src="assets/collage/mini-b.webp" alt="" />
+        </figure>
+        <img class="deco sticker-cat" src="assets/collage/cat-cut.webp" alt="戴生日帽、捧着花束的小猫贴纸" />
+        <span class="deco doodle d-star1" aria-hidden="true">✳</span>
+        <span class="deco doodle d-star2" aria-hidden="true">✳</span>
+        <span class="deco note-us" aria-hidden="true">us, always ♡</span>
+        <span class="deco date-stamp" aria-hidden="true">2004 · 11 · 12</span>
+
+        <span class="wish-glow" id="wishGlow"></span>
+      </div>
+      <div class="collage-cap">22 · a little dream made of us</div>
+    </div>
+
+    <div class="intro-right">
+      <div class="intro-eyebrow">A DREAM MADE OF US / NO. 2004</div>
+      <div class="intro-for">a little dream, for</div>
+      <div class="intro-name" data-split>陆星瑶</div>
+      <div class="intro-script">Dearest</div>
+      <div class="intro-rule"><span></span>twenty-two<span></span></div>
+      <div class="intro-feel">feeling 22 <span>♡</span></div>
+
+      <div class="wish-card">
+        <div class="wish-copy">
+          <h2 class="intro-wish" data-split>闭上眼睛，许个愿吧</h2>
+          <p class="intro-sub">按住画面，许完再松手</p>
+        </div>
+
+        <div class="wish-lights" id="wishLights" aria-label="七颗愿望星">
+          <span>✳</span><span>✳</span><span>✳</span><span>✳</span><span>✳</span><span>✳</span><span>✳</span>
+        </div>
+
+        <button class="wish-hold" id="wishHold" aria-label="按住许愿">
+          <svg class="hold-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-track" cx="60" cy="60" r="54" />
+            <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="54" />
+          </svg>
+          <span class="hold-core"><span class="hold-icon">✳</span></span>
+          <span class="hold-label" id="holdLabel">按 住 许 愿</span>
+        </button>
+      </div>
+
+      <div class="intro-skip" id="introSkip">先看看别的 →</div>
+      <div class="intro-meta">2004.11.12 — 2026 · FOR YAO</div>
+    </div>
+  </div>
+
+  <div class="intro-foot">PRESS &amp; HOLD TO MAKE A WISH · 七颗星星在等你</div>
+  <div class="wish-done" id="wishDone"><span>wish received ♡</span></div>
+</section>
+
+<!-- ============ 00 · 密码门 ============ -->
+<section class="screen" id="gate" aria-label="暗号">
+  <div class="gate-photo"></div>
+  <div class="gate-card" id="gateCard">
+    <div class="gate-stars" id="gateStars"></div>
+    <div class="gate-corner tl"></div><div class="gate-corner br"></div>
+    <p class="for">a little dream, for</p>
+    <div class="script-title">Dearest</div>
+    <div class="name">L U &nbsp; S I Y A O</div>
+    <div class="gate-count">22</div>
+    <p class="sub">请先念出那天的暗号</p>
+    <div class="pin-row" id="pinRow">
+      <div class="pin-slot"></div><div class="pin-slot"></div><div class="pin-slot"></div><div class="pin-slot"></div>
+    </div>
+    <div class="keypad" id="keypad">
+      <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+      <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+      <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+      <button class="key wide" data-k="clear">清空</button><button class="key" data-k="0">0</button>
+      <button class="key wide" data-k="del">←</button>
+    </div>
+    <p class="gate-hint">the day you arrived · <b id="hintBtn">需要一点提示？</b></p>
+    <p class="gate-foot">2004 · A DREAM MADE OF US · 2026</p>
+  </div>
+</section>
+
+<!-- ============ 01 · 星图 HUB ============ -->
+<section class="screen" id="hub" aria-label="星图">
+  <div class="hub-head">
+    <div class="left">
+      <div class="eyebrow">A DREAM MADE OF US / NO. 2004</div>
+      <div class="logo-script" id="hubLogo">Dearest</div>
+    </div>
+    <div class="star-meter">
+      <div class="n"><span id="hubStars">0</span> / 7 <span style="color:var(--lilac-ink)">✳</span></div>
+      <div class="lbl">collect the little stars</div>
+      <div class="meter-bar"><i id="hubMeter"></i></div>
+    </div>
+  </div>
+
+  <div class="hub-intro">
+    <h1 data-split>给 22 岁的 yao 的一场梦</h1>
+    <div class="en">seven stars are hiding in our memories — go find them.</div>
+    <div class="scribble">↙ start anywhere</div>
+  </div>
+
+  <div class="hub-grid" id="hubGrid">
+    <button class="quest" data-go="stars" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"><img src="assets/photos/p34.jpg" alt="夜色里的城市" loading="lazy" decoding="async" /></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 01 / PLAY</div><div class="quest-name">抓星星</div><div class="quest-en">catch the stars</div></div><div class="quest-star" data-stars="stars">☆☆☆</div></div>
+      <div class="quest-state">✳ 3 STARS</div>
+    </button>
+    <button class="quest" data-go="cards" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"><img src="assets/photos/p12.jpg" alt="我们的合照" loading="lazy" decoding="async" /></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 02 / PLAY</div><div class="quest-name">翻照片</div><div class="quest-en">turn the polaroids</div></div><div class="quest-star" data-stars="cards">☆☆☆</div></div>
+      <div class="quest-state">✳ 3 STARS</div>
+    </button>
+    <button class="quest" data-go="candles" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"><img src="assets/photos/p40.jpg" alt="绿色蛋糕" loading="lazy" decoding="async" /></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 03 / PLAY</div><div class="quest-name">吹蜡烛</div><div class="quest-en">make a wish</div></div><div class="quest-star" data-stars="candles">☆☆☆</div></div>
+      <div class="quest-state">✳ 3 STARS</div>
+    </button>
+    <button class="quest" data-go="wall" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"><img src="assets/photos/p39.jpg" alt="百合花前的我们" loading="lazy" decoding="async" /></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 04 / LOOK</div><div class="quest-name">回忆墙</div><div class="quest-en">the memory wall</div></div><div class="quest-star">42 ✳</div></div>
+      <div class="quest-state">ALWAYS OPEN</div>
+    </button>
+    <button class="quest quest-letter locked" data-go="finale" id="questFinale" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"><img src="assets/photos/p36.jpg" alt="江边的我们" loading="lazy" decoding="async" /></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 05 / A LETTER</div><div class="quest-name">给 yao 的信</div><div class="quest-en">after the games</div></div><div class="quest-star">♡</div></div>
+      <div class="quest-state" id="finaleState">LOCKED</div>
+    </button>
+    <button class="quest no-photo" data-go="egg" id="questEgg" data-tilt data-reveal>
+      <span class="tape"></span>
+      <div class="quest-photo"></div>
+      <div class="quest-body"><div><div class="quest-no">NO. 06 / ???</div><div class="quest-name">还没醒</div><div class="quest-en">something hidden</div></div><div class="quest-star">? ? ?</div></div>
+    </button>
+    <div class="hub-stickers" id="hubStickers"></div>
+  </div>
+
+  <div class="badge-row" id="badgeRow">
+    <span class="badge off" data-badge="combo">✳ 连击大师</span>
+    <span class="badge off" data-badge="perfect">✳ 一次翻对</span>
+    <span class="badge off" data-badge="wish">✳ 愿望送达</span>
+    <span class="badge off" data-badge="egg">✳ 还在梦里</span>
+  </div>
+  <div class="hub-foot">任意顺序 · 每关可重玩刷星 · 进度会自动留下</div>
+</section>
+
+<!-- ============ 02 · 抓星星 ============ -->
+<section class="screen" id="stars" aria-label="抓星星">
+  <div class="game-head"><button class="back-btn" data-back>← 回到星图</button><span class="game-id">NO. 01 / CATCH THE STARS</span>
+    <div class="hud"><span class="hud-item">TIME <b id="sTime">20</b>s</span><span class="hud-item">SCORE <b id="sScore">0</b></span><span class="hud-item">COMBO <b id="sCombo">×1</b></span><span class="hud-item">目标 <b id="sTarget">0 / 12</b></span></div>
+  </div>
+  <h2 class="game-title" data-split>把散落的星星捡回来</h2>
+  <p class="game-sub">twenty seconds · keep the combo alive</p>
+  <div class="game-panel" id="starPanel">
+    <div class="star-field"></div>
+    <div class="field-dots" id="fieldDots"></div>
+    <div class="field-hint">按「开始抓星星」，把散落的星星捡回来 ✳</div>
+    <div class="combo-pop" id="comboPop">COMBO!</div>
+    <div id="starLayer"></div>
+    <div class="time-bar"><i id="timeFill"></i></div>
+    <div class="result" id="starResult"><div class="result-card">
+      <div class="rs">well done</div><div class="rk" id="starRank">★★☆</div>
+      <p id="starDesc">抓到了 12 颗星星</p>
+      <div class="btns"><button class="btn btn-lime" data-retry="stars">再玩一次</button><button class="btn" data-back>回到星图</button><button class="btn btn-letter" data-to-letter hidden>去读那封信 →</button></div>
+    </div></div>
+  </div>
+  <p class="hand-note">点一下飘着的星星 · 连击越高分越多 · 空格也能开始</p>
+  <div class="game-actions"><button class="btn btn-lime" id="starStart" data-magnet>开始抓星星</button></div>
+</section>
+
+<!-- ============ 03 · 翻照片 ============ -->
+<section class="screen" id="cards" aria-label="翻照片">
+  <div class="game-head"><button class="back-btn" data-back>← 回到星图</button><span class="game-id">NO. 02 / TURN THE POLAROIDS</span>
+    <div class="hud"><span class="hud-item">步数 <b id="cMoves">0</b></span><span class="hud-item">配对 <b id="cPairs">0 / 4</b></span><span class="hud-item">最佳 <b id="cBest">—</b></span></div>
+  </div>
+  <h2 class="game-title" data-split>找出成对的我们</h2>
+  <p class="game-sub">four pairs, hidden in white frames</p>
+  <div class="game-panel">
+    <div class="card-board" id="cardBoard"></div>
+    <div class="result" id="cardResult"><div class="result-card">
+      <div class="rs">all found</div><div class="rk" id="cardRank">★★★</div>
+      <p id="cardDesc">用了 8 步找齐四对</p>
+      <div class="btns"><button class="btn btn-lime" data-retry="cards">再翻一次</button><button class="btn" data-back>回到星图</button><button class="btn btn-letter" data-to-letter hidden>去读那封信 →</button></div>
+    </div></div>
+  </div>
+  <p class="hand-note">翻开两张相同的照片就配成一对 · 步数越少星越多</p>
+  <div class="game-actions"><button class="btn btn-lime" id="cardRestart" data-magnet>重新洗牌</button></div>
+</section>
+
+<!-- ============ 04 · 吹蜡烛 ============ -->
+<section class="screen" id="candles" aria-label="吹蜡烛">
+  <div class="game-head"><button class="back-btn" data-back>← 回到星图</button><span class="game-id">NO. 03 / MAKE A WISH</span>
+    <div class="hud"><span class="hud-item">熄灭 <b id="kOut">0 / 7</b></span><span class="hud-item">顺序 <b id="kOrder">—</b></span></div>
+  </div>
+  <h2 class="game-title" data-split>先许一个愿，再吹灭它们</h2>
+  <p class="game-sub">seven little lights, one little wish</p>
+  <div class="game-panel" id="candlePanel">
+    <div class="cake-scene">
+      <div class="wish-line">make a wish</div>
+      <div class="cake-deco">
+        <svg viewBox="0 0 100 100" class="cd cd1"><path d="M50 0 C53 30 70 47 100 50 C70 53 53 70 50 100 C47 70 30 53 0 50 C30 47 47 30 50 0Z"/></svg>
+        <svg viewBox="0 0 100 100" class="cd cd2"><path d="M50 0 C53 30 70 47 100 50 C70 53 53 70 50 100 C47 70 30 53 0 50 C30 47 47 30 50 0Z"/></svg>
+        <svg viewBox="0 0 100 100" class="cd cd3"><path d="M50 0 C53 30 70 47 100 50 C70 53 53 70 50 100 C47 70 30 53 0 50 C30 47 47 30 50 0Z"/></svg>
+        <span class="cbub cb1"></span><span class="cbub cb2"></span><span class="cbub cb3"></span>
+      </div>
+      <div class="cake-wrap" id="cakeWrap">
+        <div class="plate"></div><div class="cake"></div><div class="tier"></div>
+      </div>
+    </div>
+    <div class="result" id="candleResult"><div class="result-card">
+      <div class="rs">wish sent</div><div class="rk" id="candleRank">★★★</div>
+      <p id="candleDesc">愿望已经寄出去了</p>
+      <div class="btns"><button class="btn btn-lime" data-retry="candles">再许一次</button><button class="btn" data-back>回到星图</button><button class="btn btn-letter" data-to-letter hidden>去读那封信 →</button></div>
+    </div></div>
+  </div>
+  <p class="hand-note">按亮起的顺序逐根吹灭 · 点蜡烛或按空格都行</p>
+  <div class="game-actions"><button class="btn btn-lime" id="candleRestart" data-magnet>重新点亮</button></div>
+</section>
+
+<!-- ============ 05 · 回忆墙 ============ -->
+<section class="screen" id="wall" aria-label="回忆墙">
+  <div class="game-head"><button class="back-btn" data-back>← 回到星图</button><span class="game-id">NO. 04 / THE MEMORY WALL</span>
+    <div class="hud"><span class="hud-item">42 张照片 · 1 段影像</span></div>
+  </div>
+  <div class="wall-head"><div class="script">our little forever</div><div class="sub">all the ordinary days that turned out to be everything</div></div>
+  <div class="video-card" data-reveal data-tilt>
+    <video id="wallVideo" src="assets/memory.mp4" poster="assets/photos/p39.jpg" muted loop playsinline preload="none"></video>
+    <div><div class="vt">一段会动的回忆</div><div class="vh">press play, stay a while ♡</div><div class="vd">那些没被说出口的话，都留在这些画面里了。点开任何一张照片，可以慢慢看。</div></div>
+  </div>
+  <div class="wall-grid" id="wallGrid"></div>
+  <div class="wall-foot">END OF THE WALL · BUT NOT OF THE STORY</div>
+</section>
+
+<!-- ============ 06 · 信 / 左手稿 · 右文字 ============ -->
+<section class="screen" id="finale" aria-label="给陆星瑶的信">
+  <div class="game-head"><button class="back-btn" data-back>← 回到星图</button><span class="game-id">A LETTER / 2026.11.10</span>
+    <div class="hud"><span class="hud-item">FROM <b>王依然</b></span></div>
+  </div>
+
+  <header class="letter-head">
+    <div class="eyebrow">ONE LAST THING · AFTER ALL THE GAMES</div>
+    <div class="letter-title">a letter <span>给即将 22 岁的陆星瑶</span></div>
+    <div class="letter-sub">同一封信，两种笔迹。左边是写给她的原稿，右边是我一个字一个字敲下来的。</div>
+  </header>
+
+  <div class="letter-cols" id="letterPage">
+    <aside class="letter-original">
+      <div class="orig-label">HANDWRITTEN / 手写原稿</div>
+      <button class="orig-page op1" data-letter-page="1" aria-label="查看手写原稿第一页">
+        <img src="assets/letter/page1.jpg" alt="手写信第一页" loading="lazy" decoding="async" />
+        <span>01 / 02</span>
+      </button>
+      <button class="orig-page op2" data-letter-page="2" aria-label="查看手写原稿第二页">
+        <img src="assets/letter/page2.jpg" alt="手写信第二页" loading="lazy" decoding="async" />
+        <span>02 / 02</span>
+      </button>
+      <div class="orig-note">点开可以放大看 · 王依然 手书</div>
+    </aside>
+
+    <article class="letter-transcript">
+      <div class="transcript-tab"><span>A LETTER FOR YAO</span><span>2026.11.10</span></div>
+      <div class="letter-sheet" id="letterSheet">
+        <div class="sheet-rule"></div>
+        <div class="letter-to">给即将 22 岁的陆星瑶：</div>
+        <div class="letter-body" id="letterText"></div>
+        <div class="letter-sign">王依然 <span>· 2026.11.10</span></div>
+        <div class="sheet-corner"></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="finale-actions">
+    <button class="btn btn-lime" id="saveCard" data-magnet>↓ 保存这张纪念卡</button>
+    <button class="btn btn-ghost" data-back>再逛逛星图</button>
+  </div>
+  <div class="locked-note" id="lockedNote" hidden>还差 <b id="needStars">7</b> 颗星星，信才会醒过来 ✳</div>
+  <div class="letter-foot">THIS DREAM NEVER ENDS ♡</div>
+</section>
+
+<!-- ============ overlays ============ -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="关闭">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一张">‹</button>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="下一张">›</button>
+  <div class="lb-inner"><img id="lbImg" src="" alt="" /><div class="lb-cap" id="lbCap"></div><div class="lb-meta" id="lbMeta"></div></div>
+</div>
+<div id="toast"></div>
+<button id="sound-toggle" aria-label="音效开关" title="音效开关">♪</button>
+
+<script src="motion.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

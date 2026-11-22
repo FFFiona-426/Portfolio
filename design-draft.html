@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>生日星球 · 网页设计草稿 v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Courier+Prime:wght@400;700&family=Fredoka:wght@600;700&family=Great+Vibes&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============ 文档骨架 ============ */
+:root{
+  --paper:#f7f3ee; --paper-2:#fffdfa; --ink:#2b2025; --muted:#8c7c78; --line:#e6dcd2;
+  --night:#0e0b0d; --velvet:#8f0f20; --velvet-lit:#c4122d;
+  --gold:#ffd700; --gold-soft:#f5c842;
+  --cream:#fff6f9; --rose:#e91e63; --rose-deep:#c2185b; --pink:#ff7597;
+  --lav:#a48ebd; --lav-deep:#836c9d;
+  --doc:"Poppins","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--doc);font-size:15px;line-height:1.75;
+  background-image:radial-gradient(#e9dfd4 1px,transparent 1px);background-size:22px 22px}
+a{color:var(--rose-deep)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+/* ============ 封面 ============ */
+.hero{position:relative;overflow:hidden;color:#f7ecd9;background:
+  radial-gradient(ellipse 70% 60% at 50% 100%,rgba(225,135,55,.20),transparent 70%),
+  radial-gradient(circle 900px at 50% 30%,#171215,#0e0b0d 60%,#080708);
+  padding:64px 0 56px;border-bottom:6px solid var(--gold-soft)}
+.hero::before,.hero::after{content:"";position:absolute;top:0;bottom:0;width:9%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(255,255,255,.07) 16%,rgba(0,0,0,.04) 55%,rgba(0,0,0,.65)),
+  repeating-linear-gradient(90deg,#2a0006 0,#52010e 8px,#8f081c 16px,#c4122d 26px,#eb2645 33px,#c4122d 40px,#7a0415 52px,#3d0008 62px,#1e0004 70px)}
+.hero::before{left:0}.hero::after{right:0;transform:scaleX(-1)}
+.hero .wrap{position:relative;z-index:2;text-align:center}
+.kicker{display:inline-block;border:1px solid rgba(255,215,0,.55);color:var(--gold-soft);
+  border-radius:999px;padding:4px 16px;font-size:12px;letter-spacing:.22em;text-transform:uppercase}
+.hero h1{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(38px,6vw,68px);
+  line-height:1.1;margin:22px 0 10px;letter-spacing:.02em;text-shadow:0 4px 24px rgba(255,215,0,.18)}
+.hero h1 em{font-style:normal;color:var(--gold-soft)}
+.hero .sub{font-family:"Fredoka","PingFang SC",sans-serif;font-size:clamp(15px,2vw,19px);color:#e9d9c4;max-width:660px;margin:0 auto}
+.hero .meta{margin-top:28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hero .meta span{font-size:12px;color:#cbb9aa;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:5px 12px;background:rgba(255,255,255,.04)}
+.toc{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+.toc a{font-size:12.5px;color:#f3e6d5;text-decoration:none;border-bottom:1px dotted rgba(255,215,0,.5);padding:2px 4px}
+
+/* ============ 章节 ============ */
+section{padding:56px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+.sec-num{font-family:"Playfair Display",serif;font-size:13px;font-weight:900;color:#fff;background:var(--rose-deep);
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;letter-spacing:0}
+h2{font-family:"Playfair Display","PingFang SC",serif;font-size:28px;margin:0;font-weight:700}
+.lead{color:var(--muted);margin:0 0 26px;max-width:820px;font-size:14px}
+h3{font-size:15px;margin:26px 0 12px;letter-spacing:.02em}
+.card{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:22px;
+  box-shadow:0 8px 26px rgba(90,60,50,.05)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.08em;color:var(--rose-deep);background:#fdeef3;
+  border:1px solid #f6d7e2;border-radius:6px;padding:2px 8px;margin-right:6px}
+
+/* 色卡 */
+.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.sw{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.sw .chip{height:72px}
+.sw .lb{padding:8px 10px;font-size:11.5px;line-height:1.5}
+.sw .lb b{display:block;font-size:12px;font-weight:600}
+.sw .lb code{color:var(--muted);font-family:"Courier Prime",monospace;font-size:11px}
+
+/* 字体样张 */
+.fontrow{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.fontrow:last-child{border:0}
+.fontrow .nm{width:170px;flex:none;font-size:11.5px;color:var(--muted);font-family:"Courier Prime",monospace}
+.fontrow .sp{font-size:26px;line-height:1.2;color:var(--ink)}
+.f-playfair{font-family:"Playfair Display",serif;font-weight:700}
+.f-chewy{font-family:"Chewy","Fredoka",cursive}
+.f-fredoka{font-family:"Fredoka","PingFang SC",sans-serif;font-weight:700}
+.f-courier{font-family:"Courier Prime",monospace}
+.f-vibes{font-family:"Great Vibes",cursive}
+
+/* 材质 */
+.mat{height:110px;border-radius:12px;border:1px solid var(--line);position:relative;overflow:hidden;display:grid;place-items:center}
+.mat span{background:rgba(255,255,255,.86);border-radius:999px;padding:4px 12px;font-size:11.5px;letter-spacing:.06em}
+.mat-1{background-color:#f7f3ed;background-image:linear-gradient(90deg,rgba(200,36,52,.42) 50%,transparent 50%),linear-gradient(rgba(200,36,52,.42) 50%,transparent 50%);background-size:26px 26px}
+.mat-2{background:#fbf7ee;background-image:radial-gradient(#ebdcc8 1.5px,transparent 1.5px),radial-gradient(#f2e4d2 1.5px,#fbf7ee 1.5px);background-size:20px 20px}
+.mat-3{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(255,255,255,.07) 18%,rgba(0,0,0,.6)),repeating-linear-gradient(90deg,#2a0006 0,#52010e 10px,#8f081c 22px,#c4122d 32px,#eb2645 40px,#c4122d 48px,#7a0415 60px,#3d0008 70px,#1e0004 78px)}
+
+/* 流程 */
+.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.flow .fnode{flex:1;min-width:150px;background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative}
+.flow .fnode.hot{background:linear-gradient(160deg,#fff2f6,#fde3ec);border-color:#f3c2d4}
+.flow .fnode.dark{background:linear-gradient(160deg,#2a1420,#140c11);border-color:#3a2230;color:#f3e2d4}
+.flow .fnode .n{font-family:"Courier Prime",monospace;font-size:11px;color:var(--rose-deep)}
+.flow .fnode.dark .n{color:var(--gold-soft)}
+.flow .fnode b{display:block;font-size:14px;margin:4px 0 5px}
+.flow .fnode p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.6}
+.flow .fnode.dark p{color:#c9b6a5}
+.arrow{align-self:center;color:var(--rose-deep);font-size:20px;flex:none}
+.branch{margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.branch div{border:1px dashed #e7c9d6;border-radius:12px;padding:12px;text-align:center;font-size:12px;background:#fff8fb}
+.branch div b{display:block;color:var(--rose-deep);font-size:13px;margin-bottom:2px}
+.branch div small{color:var(--muted);font-size:11px}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--paper-2);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f3e9e2;font-size:11.5px;letter-spacing:.04em;color:#6b5450}
+tr:last-child td{border-bottom:0}
+td b{color:var(--rose-deep)}
+.pill{font-size:10.5px;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.p-must{background:#fde3ec;color:#a3123f}
+.p-next{background:#eee9f5;color:#5f4785}
+.p-fun{background:#fff2d9;color:#8a6308}
+
+/* ============ 界面视觉稿 ============ */
+.scenes{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.scene-card{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 10px 28px rgba(90,60,50,.06)}
+.scene-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 12px}
+.scene-top .t{font-size:13.5px;font-weight:600}
+.scene-top .t small{display:block;font-weight:400;color:var(--muted);font-size:11px;font-family:"Courier Prime",monospace}
+.zoom{border:1px solid var(--line);background:#fff;border-radius:8px;font-size:11.5px;padding:5px 10px;cursor:pointer;color:var(--rose-deep);white-space:nowrap}
+.zoom:hover{background:#fdeef3;border-color:#f3c2d4}
+.scene-frame{position:relative;width:100%;aspect-ratio:600/375;overflow:hidden;border-radius:12px;border:1px solid rgba(0,0,0,.12);background:#eee}
+.scene-canvas{position:absolute;top:0;left:0;width:600px;height:375px;transform-origin:top left;transform:scale(var(--scale,1));overflow:hidden}
+.notes{margin:12px 2px 2px;padding:0;list-style:none;font-size:11.5px;color:#6f5f5b;line-height:1.65}
+.notes li{padding-left:18px;position:relative;margin-bottom:3px}
+.notes li::before{content:"";position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--pink)}
+.notes b{color:var(--ink)}
+
+/* --- 通用场景元素 --- */
+.sc{position:absolute;inset:0;font-family:"Fredoka","PingFang SC",sans-serif;overflow:hidden}
+.sc .hd{position:absolute;top:16px;left:20px;right:20px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+.chip-s{background:rgba(255,255,255,.88);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;letter-spacing:.03em;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+.chip-s.gold{background:linear-gradient(135deg,#ffe9a8,#f5c842);color:#5c4000}
+.chip-s.rose{background:linear-gradient(135deg,#ff8fb0,#e91e63);color:#fff}
+.btn-s{border:0;border-radius:999px;padding:10px 20px;font-family:"Chewy","Fredoka",cursive;font-size:14px;letter-spacing:.04em;cursor:pointer;
+  background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;box-shadow:0 6px 18px rgba(194,24,91,.42)}
+.btn-s.gold{background:linear-gradient(135deg,#ffd700,#d4a017);color:#3c2600;box-shadow:0 0 22px rgba(255,215,0,.4)}
+.foot-s{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.04em;z-index:5}
+.mote{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,220,150,.9),rgba(230,140,50,.25) 60%,transparent 80%);animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-4deg);opacity:1}50%{transform:scale(1.18) rotate(5deg);opacity:.82}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes bobR{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-9px)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translateY(390px) rotate(280deg);opacity:0}}
+
+/* S1 午夜剧场 */
+.s1{background:radial-gradient(ellipse 70% 55% at 50% 88%,rgba(225,135,55,.22),transparent 72%),radial-gradient(circle 620px at 50% 38%,#1d141c,#0e0b0d 62%,#080708);color:#f5deb3}
+.s1 .cur{position:absolute;top:-10px;bottom:-10px;width:25%;
+  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(255,255,255,.07) 16%,rgba(0,0,0,.04) 55%,rgba(0,0,0,.7)),
+  repeating-linear-gradient(90deg,#2a0006 0,#52010e 9px,#8f081c 18px,#c4122d 28px,#eb2645 35px,#c4122d 43px,#7a0415 54px,#3d0008 64px,#1e0004 72px);
+  box-shadow:0 0 40px rgba(0,0,0,.8)}
+.s1 .cur.l{left:-4%;border-radius:0 26% 30% 0/0 8% 10% 0}
+.s1 .cur.r{right:-4%;transform:scaleX(-1);border-radius:0 26% 30% 0/0 8% 10% 0}
+.s1 .curtain-top{position:absolute;top:0;left:0;right:0;height:26px;background:linear-gradient(180deg,#3d0008,#8f081c 60%,#52010e);border-bottom:3px solid var(--gold-soft)}
+.s1 .clock{position:absolute;left:50%;top:52px;transform:translateX(-50%);width:132px;height:132px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#380829,#1c0216 65%,#0d000c);
+  box-shadow:inset 0 0 30px rgba(0,0,0,.9),0 0 0 6px #8b6508,0 0 0 9px #ffd700,0 0 0 13px #5c4000,0 10px 32px rgba(0,0,0,.8)}
+.s1 .ticks{position:absolute;inset:8px;border-radius:50%;background:repeating-conic-gradient(from 0deg,#f5deb3 0 1.2deg,transparent 1.2deg 30deg);-webkit-mask:radial-gradient(circle,transparent 76%,#000 78%);mask:radial-gradient(circle,transparent 76%,#000 78%);opacity:.85}
+.s1 .hand{position:absolute;left:50%;bottom:50%;width:3px;background:var(--gold);transform-origin:bottom center;border-radius:3px}
+.s1 .hand.h{height:34px;transform:translateX(-50%) rotate(312deg)}
+.s1 .hand.m{height:46px;width:2px;transform:translateX(-50%) rotate(354deg)}
+.s1 .hand.sec{height:52px;width:1.5px;background:#ff8f6b;transform:translateX(-50%) rotate(0deg)}
+.s1 .dot{position:absolute;left:50%;top:50%;width:9px;height:9px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%)}
+.s1 .digi{position:absolute;top:196px;left:0;right:0;text-align:center;font-family:"Playfair Display",serif;font-size:22px;letter-spacing:.24em;color:var(--gold-soft);text-shadow:0 0 14px rgba(255,215,0,.7)}
+.s1 .ttl{position:absolute;top:230px;left:0;right:0;text-align:center;font-family:"Chewy","PingFang SC",cursive;font-size:29px;color:#fff3df;letter-spacing:.08em;text-shadow:0 3px 14px rgba(0,0,0,.8)}
+.s1 .sub-t{position:absolute;top:268px;left:0;right:0;text-align:center;font-size:11.5px;color:#d9c2a4;letter-spacing:.1em}
+.s1 .cta{position:absolute;top:296px;left:50%;transform:translateX(-50%)}
+.s1 .petal{position:absolute;width:11px;height:7px;border-radius:60% 10% 60% 10%;background:#d24b6a;opacity:.75;animation:fall 9s linear infinite}
+
+/* S2 星图地图 */
+.s2{background:radial-gradient(ellipse at 50% 42%,#fff6fa,#fde3ec 62%,#f3c9dc);color:#8c1932}
+.s2 .s2bg{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(233,30,99,.06) 50%,transparent 50%),linear-gradient(rgba(233,30,99,.06) 50%,transparent 50%);background-size:26px 26px}
+.s2 .title{position:absolute;top:56px;left:0;right:0;text-align:center;font-family:"Chewy","PingFang SC",cursive;font-size:26px;color:#a3123f;text-shadow:0 2px 0 #fff}
+.s2 .title small{display:block;font-family:"Fredoka","PingFang SC",sans-serif;font-size:11px;letter-spacing:.18em;color:#c26a86;margin-top:2px}
+.s2 .path{position:absolute;top:104px;left:36px;width:528px;height:190px;z-index:1}
+.s2 .node{position:absolute;z-index:2;width:82px;height:82px;border-radius:26px;background:#fff;display:grid;place-items:center;
+  box-shadow:0 8px 20px rgba(160,25,45,.2);border:2px solid #fff;text-align:center;transform:rotate(-4deg)}
+.s2 .node .ic{font-size:26px;line-height:1}
+.s2 .node .lb{font-size:10px;font-weight:700;color:#8c1932;margin-top:2px}
+.s2 .node .st{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:#fff;background:#b9a7ac}
+.s2 .node.done .st{background:#e0a92b}
+.s2 .node.open{box-shadow:0 0 0 5px rgba(233,30,99,.16),0 10px 24px rgba(194,24,91,.35);animation:bobR 3s ease-in-out infinite}
+.s2 .node.done{background:#fff8e6}
+.s2 .node.lock{filter:grayscale(.7);opacity:.72}
+.s2 .n1{left:72px;top:122px}.s2 .n2{left:184px;top:200px}.s2 .n3{left:294px;top:132px}.s2 .n4{left:434px;top:216px}.s2 .n5{left:476px;top:122px}
+.s2 .badges{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center}
+.s2 .badges span{background:rgba(255,255,255,.9);border:1px dashed #e7a8c2;border-radius:999px;padding:5px 11px;font-size:10.5px;color:#a3123f}
+.s2 .badges .egg{background:#3b2140;color:#ffe9a8;border-color:#3b2140;letter-spacing:.1em}
+.s2 .prog{position:absolute;top:16px;right:20px;width:130px;z-index:6}
+.s2 .prog .bar{height:9px;border-radius:99px;background:#fff;box-shadow:inset 0 1px 3px rgba(0,0,0,.12);overflow:hidden;margin-top:4px}
+.s2 .prog .bar i{display:block;height:100%;width:43%;background:linear-gradient(90deg,#ffd700,#e91e63)}
+
+/* S3 抓星星 */
+.s3{background-color:#fff6f9;background-image:linear-gradient(90deg,rgba(233,30,99,.10) 50%,transparent 50%),linear-gradient(rgba(233,30,99,.10) 50%,transparent 50%);background-size:28px 28px;color:#8c1932}
+.s3 .hud{position:absolute;top:52px;left:22px;right:22px;display:flex;gap:8px;z-index:4}
+.s3 .hud span{background:#fff;border:1px solid #f4c9d9;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:700;box-shadow:0 4px 10px rgba(180,25,40,.1)}
+.s3 .hud span b{color:#e91e63;font-family:"Courier Prime",monospace}
+.s3 .star{position:absolute;color:#ffc93c;text-shadow:0 0 16px rgba(255,201,60,.9),0 4px 0 #d99b12;font-size:34px;animation:bob 3s ease-in-out infinite;cursor:pointer}
+.s3 .star.big{font-size:64px;color:#fff; text-shadow:0 0 26px #ff8fb0,0 0 6px #e91e63;left:270px;top:150px;animation:flick 1.6s ease-in-out infinite}
+.s3 .ring{position:absolute;left:252px;top:132px;width:100px;height:100px;border:2px dashed rgba(233,30,99,.55);border-radius:50%;animation:bob 3s ease-in-out infinite}
+.s3 .combo{position:absolute;top:96px;left:50%;transform:translateX(-50%);font-family:"Chewy",cursive;font-size:30px;color:#e91e63;text-shadow:0 3px 0 #fff}
+.s3 .hint{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:11px;color:#a2586f}
+
+/* S4 吹蜡烛 */
+.s4{background:radial-gradient(ellipse at 50% 30%,#fffdfa,#ffe9f0 70%,#f7cddd);color:#8c1932}
+.s4 .arch{position:absolute;top:44px;left:0;right:0;text-align:center;font-family:"Chewy","PingFang SC",cursive;font-size:24px;color:#c2185b;letter-spacing:.12em;text-shadow:0 2px 0 #fff}
+.s4 .plate{position:absolute;left:50%;top:262px;transform:translateX(-50%);width:270px;height:20px;border-radius:50%;background:linear-gradient(180deg,#fff,#e7c9d4);box-shadow:0 8px 16px rgba(160,25,45,.18)}
+.s4 .cake{position:absolute;left:50%;top:180px;transform:translateX(-50%);width:220px;height:86px;border-radius:14px 14px 20px 20px;
+  background:linear-gradient(180deg,#ffd9e7 0 14%,#fff8fa 14% 28%,#ffb6cf 28% 36%,#fff1f6 36% 100%);
+  border:2px solid #eea6c2;box-shadow:0 10px 22px rgba(194,24,91,.2)}
+.s4 .cake::before{content:"";position:absolute;left:-10px;right:-10px;top:-14px;height:26px;border-radius:50%;background:#fff8fa;border:2px solid #eea6c2}
+.s4 .cake::after{content:"";position:absolute;left:14px;right:14px;top:38px;bottom:10px;
+  background-image:radial-gradient(circle,#e91e63 2.2px,transparent 2.6px);background-size:26px 22px;opacity:.42}
+.s4 .tier{position:absolute;left:50%;top:118px;transform:translateX(-50%);width:140px;height:62px;border-radius:12px 12px 16px 16px;
+  background:linear-gradient(180deg,#ffd9e7 0 16%,#fff8fa 16% 30%,#ffb6cf 30% 38%,#fff1f6 38% 100%);
+  border:2px solid #eea6c2;box-shadow:0 6px 14px rgba(194,24,91,.12)}
+.s4 .tier::before{content:"";position:absolute;left:-8px;right:-8px;top:-12px;height:24px;border-radius:50%;background:#fff8fa;border:2px solid #eea6c2}
+.s4 .tier::after{content:"";position:absolute;left:12px;right:12px;top:26px;bottom:8px;
+  background-image:radial-gradient(circle,#c2185b 1.8px,transparent 2.2px);background-size:22px 18px;opacity:.36}
+.s4 .candle{position:absolute;width:9px;height:30px;border-radius:4px;border:1px solid #e58aa9;box-shadow:0 2px 4px rgba(160,25,45,.16);
+  background:repeating-linear-gradient(45deg,#ff9dbb 0 5px,#fff 5px 10px);transform-origin:bottom center;z-index:4}
+.s4 .flame{position:absolute;left:50%;top:-15px;transform:translateX(-50%);width:10px;height:16px;border-radius:50% 50% 45% 45%;
+  background:radial-gradient(circle at 50% 70%,#fff9c4,#ffca28 55%,#ff7043);box-shadow:0 0 14px rgba(255,190,60,.95);animation:flick 1s ease-in-out infinite}
+.s4 .candle.off .flame{display:none}
+.s4 .candle.off::after{content:"~";position:absolute;top:-22px;left:-3px;color:#b9a2aa;font-size:16px}
+.s4 .mic{position:absolute;right:26px;bottom:52px;background:#fff;border:1px solid #f3c2d4;border-radius:14px;padding:10px 14px;font-size:11px;box-shadow:0 6px 18px rgba(160,25,45,.14);transform:rotate(4deg)}
+.s4 .mic b{display:block;font-family:"Fredoka",sans-serif;font-size:16px;color:#e91e63}
+.s4 .wish{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:11px;color:#a2586f}
+
+/* S5 翻牌 */
+.s5{background:#fbf7ee;background-image:radial-gradient(#ebdcc8 1.5px,transparent 1.5px),radial-gradient(#f2e4d2 1.5px,#fbf7ee 1.5px);background-size:20px 20px;color:#8c1932}
+.s5 .board{position:absolute;top:78px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,104px);gap:12px}
+.s5 .pola{height:112px;background:#fff;border-radius:6px;padding:8px 8px 22px;box-shadow:0 8px 16px rgba(90,60,40,.2);position:relative;transition:.2s}
+.s5 .pola .ph{height:100%;border-radius:2px;background:linear-gradient(135deg,#f8d9e6,#c9a7d8 55%,#8fb4d8);position:relative;overflow:hidden}
+.s5 .pola .ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(160deg,transparent 40%,rgba(110,70,90,.5) 41%,rgba(110,70,90,.7));clip-path:polygon(0 100%,0 62%,28% 34%,52% 66%,74% 26%,100% 58%,100% 100%)}
+.s5 .pola .cap{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:"Great Vibes",cursive;font-size:12px;color:#a2687c}
+.s5 .pola.back{background-color:#fff;background-image:linear-gradient(90deg,rgba(218,41,60,.5) 50%,transparent 50%),linear-gradient(rgba(218,41,60,.5) 50%,transparent 50%);background-size:14px 14px;display:grid;place-items:center}
+.s5 .pola.back::after{content:"?";font-family:"Chewy",cursive;font-size:30px;color:#fff;text-shadow:0 2px 4px rgba(140,25,50,.5);background:#c2185b;width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+.s5 .pola.flip{transform:rotateY(0)}
+.s5 .pola.hov{transform:translateY(-8px) rotate(-3deg);box-shadow:0 16px 26px rgba(160,25,45,.28)}
+.s5 .pola .clip{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:16px;height:22px;border-radius:3px;background:linear-gradient(90deg,#dfc49e,#ecd8b8);box-shadow:0 2px 4px rgba(90,60,40,.35)}
+.s5 .rate{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:12px;letter-spacing:.1em;color:#c2185b}
+
+/* S6 终章信件 */
+.s6{background:linear-gradient(145deg,#a48ebd,#957eb0 50%,#836c9d);color:#fff}
+.s6 .sky{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.5) 1.2px,transparent 1.2px);background-size:36px 36px;opacity:.6}
+.s6 .pola3d{position:absolute;left:44px;top:96px;width:190px;height:220px;background:#fff;padding:12px 12px 38px;border-radius:4px;
+  box-shadow:0 24px 50px rgba(35,12,50,.4);transform:perspective(700px) rotateY(-16deg) rotateZ(-6deg);animation:sway 6s ease-in-out infinite}
+.s6 .pola3d .ph{height:100%;background:linear-gradient(150deg,#ffe0ec,#c7a9dd 60%,#8fb8dd);position:relative;overflow:hidden;border-radius:2px}
+.s6 .pola3d .ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;background:rgba(80,45,95,.42);clip-path:polygon(0 100%,0 68%,30% 40%,58% 70%,80% 34%,100% 62%,100% 100%)}
+.s6 .pola3d .cap{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-family:"Great Vibes",cursive;font-size:18px;color:#7a4a68}
+.s6 .bow{position:absolute;left:104px;top:78px;font-size:34px;transform:rotate(-14deg);filter:drop-shadow(0 4px 8px rgba(40,10,60,.4))}
+.s6 .letter{position:absolute;right:36px;top:78px;width:290px;height:232px;border-radius:8px;padding:22px 22px;
+  background-color:#f6f0fb;background-image:linear-gradient(90deg,rgba(188,168,216,.55) 50%,transparent 50%),linear-gradient(rgba(188,168,216,.55) 50%,transparent 50%);background-size:18px 18px;
+  box-shadow:0 24px 50px rgba(35,12,50,.38);transform:rotate(2deg)}
+.s6 .letter h4{margin:0 0 10px;font-family:"Playfair Display",serif;font-size:17px;color:#5c3a70}
+.s6 .letter p{margin:0;font-family:"Courier Prime",monospace;font-size:11.5px;line-height:1.85;color:#4a3358}
+.s6 .caret{display:inline-block;width:7px;height:13px;background:#c2185b;vertical-align:-2px;animation:blink .9s step-end infinite}
+.s6 .confetti{position:absolute;width:8px;height:12px;border-radius:2px;opacity:.9;animation:fall 7s linear infinite}
+.s6 .save{position:absolute;bottom:20px;left:50%;transform:translateX(-50%)}
+.s6 .rays{position:absolute;left:50%;top:50%;width:520px;height:520px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,225,150,.28),transparent 60%);pointer-events:none}
+
+/* 规范小卡 */
+.spec{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.spec div{border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;font-size:11.5px;line-height:1.6}
+.spec div b{display:block;font-size:12.5px;margin-bottom:4px;color:var(--rose-deep)}
+.kbd{font-family:"Courier Prime",monospace;background:#f2ece6;border:1px solid #ded2c6;border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:11px}
+.callout{border-left:4px solid var(--rose);background:#fff6f9;padding:14px 18px;border-radius:0 12px 12px 0;font-size:13px;margin:18px 0}
+ul.clean{padding-left:18px;margin:8px 0;font-size:13px}
+ul.clean li{margin:5px 0}
+.two-col{columns:2;column-gap:30px;font-size:13px}
+footer{margin-top:60px;padding:30px 0 46px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;text-align:center}
+
+/* 放大查看 */
+.lightbox{position:fixed;inset:0;z-index:99;background:rgba(18,10,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
+.lightbox[hidden]{display:none}
+.lb-frame{width:min(960px,94vw);aspect-ratio:600/375;border-radius:16px;box-shadow:0 30px 90px rgba(0,0,0,.6);background:#eee}
+.lb-cap{color:#f3e2d4;font-size:13px;text-align:center}
+.lb-close{position:absolute;top:20px;right:26px;background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer}
+
+@media (max-width:900px){
+  .grid-2,.grid-3,.scenes{grid-template-columns:1fr}
+  .swatches{grid-template-columns:repeat(3,1fr)}
+  .branch{grid-template-columns:repeat(2,1fr)}
+  .spec{grid-template-columns:repeat(2,1fr)}
+  .two-col{columns:1}
+  .flow .fnode{min-width:130px}
+  .arrow{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div style="position:relative;z-index:9;background:#1b2a20;color:#e4f7b1;text-align:center;padding:10px 16px;font-size:12.5px;letter-spacing:.06em">
+  ⚠ 这份是 v0.1 的旧配色草稿（红丝绒 / 粉紫），已由梦核绿风格取代。请打开同目录下的 <a href="index.html" style="color:#c6f24a;font-weight:600">index.html</a> 查看新的可玩版本。
+</div>
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">Design Draft · v0.1 · 2026.11.07</span>
+    <h1>生日星球 <em>Birthday Planet</em></h1>
+    <p class="sub">一场「集齐 7 颗愿望星」的生日闯关夜。参考 Secret Birthday Gift 的舞台剧叙事与复古手账美学，把单向的礼物展示改造成可反复玩、有评分、有收集、有终章解锁的小游戏合集。</p>
+    <div class="meta">
+      <span>视觉基调：午夜剧场 · 红丝绒 · 拍立得 · 粉紫格纹</span>
+      <span>纯原生 HTML / CSS / JS · 零依赖</span>
+      <span>桌面 / 平板 / 手机</span>
+    </div>
+    <nav class="toc">
+      <a href="#s1">01 风格提炼</a><a href="#s2">02 玩法流程</a><a href="#s3">03 界面视觉稿</a>
+      <a href="#s4">04 玩法机制表</a><a href="#s5">05 交互规范</a><a href="#s6">06 技术方案</a><a href="#s7">07 待确认</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 01 -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>风格提炼：从参考站继承什么，改造什么</h2></div>
+  <p class="lead">参考项目最打动人的是「戏剧感 + 手作感」：拉开的红丝绒幕布、金色时钟、烛光微粒，配上红白格纹纸卡、木夹拍立得、圆润手写字体、打字机情书。这些全部保留；改造的是结构——把「密码 → 3 个礼盒」的线性展示，换成「一张可自由探索的星图 + 5 个可计分的小游戏」。</p>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="margin-top:0">色彩系统 · Color Tokens</h3>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#0e0b0d"></div><div class="lb"><b>午夜黑</b><code>#0E0B0D</code></div></div>
+        <div class="sw"><div class="chip" style="background:linear-gradient(135deg,#8f081c,#c4122d,#eb2645)"></div><div class="lb"><b>丝绒红</b><code>#C4122D</code></div></div>
+        <div class="sw"><div class="chip" style="background:#f5c842"></div><div class="lb"><b>烛光金</b><code>#F5C842</code></div></div>
+        <div class="sw"><div class="chip" style="background:#fff6f9;border:1px solid #f6dce7"></div><div class="lb"><b>奶油纸</b><code>#FFF6F9</code></div></div>
+        <div class="sw"><div class="chip" style="background:#e91e63"></div><div class="lb"><b>主玫红</b><code>#E91E63</code></div></div>
+        <div class="sw"><div class="chip" style="background:#ff7597"></div><div class="lb"><b>糖霜粉</b><code>#FF7597</code></div></div>
+        <div class="sw"><div class="chip" style="background:#c2185b"></div><div class="lb"><b>深莓红</b><code>#C2185B</code></div></div>
+        <div class="sw"><div class="chip" style="background:#a48ebd"></div><div class="lb"><b>薰衣草紫</b><code>#A48EBD</code></div></div>
+        <div class="sw"><div class="chip" style="background:#836c9d"></div><div class="lb"><b>信纸紫</b><code>#836C9D</code></div></div>
+        <div class="sw"><div class="chip" style="background:#fbf7ee"></div><div class="lb"><b>手账米</b><code>#FBF7EE</code></div></div>
+      </div>
+      <h3>字体分工 · Type Scale</h3>
+      <div class="fontrow"><span class="nm">Playfair Display<br>仪式感标题 / 时钟</span><span class="sp f-playfair">Midnight Birthday</span></div>
+      <div class="fontrow"><span class="nm">Chewy / Fredoka<br>关卡标题 / 按钮</span><span class="sp f-chewy">Make a Wish!</span></div>
+      <div class="fontrow"><span class="nm">Fredoka / Poppins<br>HUD / 正文 / 数字</span><span class="sp f-fredoka">COMBO ×4 · 00:18</span></div>
+      <div class="fontrow"><span class="nm">Courier Prime<br>打字机情书</span><span class="sp f-courier">Happy birthday...</span></div>
+      <div class="fontrow"><span class="nm">Great Vibes<br>签名 / 拍立得手写</span><span class="sp f-vibes">Forever yours</span></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">材质与图形语言</h3>
+      <div class="grid-3" style="gap:10px">
+        <div><div class="mat mat-1"><span>红白 Gingham</span></div><p style="font-size:11px;color:var(--muted);margin:6px 0 0">格纹桌布 / 卡片背面 / 关卡底</p></div>
+        <div><div class="mat mat-2"><span>圆点手账纸</span></div><p style="font-size:11px;color:var(--muted);margin:6px 0 0">翻牌区 / 纪念卡背景</p></div>
+        <div><div class="mat mat-3"><span>丝绒条纹</span></div><p style="font-size:11px;color:var(--muted);margin:6px 0 0">开幕 / 转场 / 终章</p></div>
+      </div>
+      <h3>标志性元素清单</h3>
+      <ul class="clean">
+        <li><b>白边拍立得</b> + 小木夹 + 手写花体说明，轻微摇摆物理感</li>
+        <li><b>金色描边与光晕</b>：时钟、星星、进度徽章统一 2~3px 金边 + 柔光</li>
+        <li><b>彩色星星贴纸</b>（青 / 橙 / 黄 / 玫红 / 紫 / 蓝）作为点缀与计分单位</li>
+        <li><b>环境粒子</b>：烛光微粒、飘落玫瑰花瓣、彩纸屑三层，低透明度不抢主体</li>
+        <li><b>纸张质感</b>：撕边、圆角、投影、2~6° 随机倾角，禁止纯平直角卡片</li>
+        <li><b>弹性动效</b>：cubic-bezier(.34,1.56,.64,1)，所有卡片有轻微悬浮/摇摆</li>
+      </ul>
+      <div class="callout" style="margin-bottom:0"><b>改造原则：</b>参考站是「看」的礼物，这版是「玩」的礼物。每一屏都必须有明确的操作、即时反馈、可见进度和奖励；任何一关都能单独重玩刷分，不因失败卡住流程。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>玩法流程：集齐 7 颗愿望星</h2></div>
+  <p class="lead">叙事钩子：生日蛋糕上的 7 颗愿望星被夜风吹散，散落在「生日星球」的 5 个游乐摊位。每通一关得 1~3 颗星（按表现评级），集满 7 颗点亮终章生日信。关卡可任意顺序进入，避免线性卡关。</p>
+  <div class="card">
+    <div class="flow">
+      <div class="fnode dark"><span class="n">ACT 0</span><b>午夜剧场</b><p>倒计时 5 秒 → 红丝绒幕布拉开 → 输入 4 位生日密码 / 点击「拆开邀请函」</p></div>
+      <span class="arrow">→</span>
+      <div class="fnode"><span class="n">HUB</span><b>愿望星图</b><p>手绘地图主界面：5 个摊位节点、★ 0/7 进度条、成就徽章、隐藏彩蛋入口</p></div>
+      <span class="arrow">→</span>
+      <div class="fnode hot"><span class="n">GAMES ×5</span><b>自由闯关</b><p>任意顺序进入，每关按表现给 1~3 星，可无限重玩刷新最佳纪录</p></div>
+      <span class="arrow">→</span>
+      <div class="fnode dark"><span class="n">FINALE</span><b>点亮生日信</b><p>满 7 星解锁：打字机情书 + 3D 拍立得 + 全屏彩纸 + 可下载的纪念卡</p></div>
+    </div>
+    <div class="branch">
+      <div><b>① 抓星星</b><small>限时点击 · 连击计分</small></div>
+      <div><b>② 吹蜡烛</b><small>节奏 / 麦克风吹气</small></div>
+      <div><b>③ 拍立得翻牌</b><small>记忆配对 · 步数评级</small></div>
+      <div><b>④ 幸运扭蛋</b><small>随机祝福签 · 图鉴收集</small></div>
+      <div><b>⑤ 拼图 + 签名</b><small>拖拽合照 · 手写留念</small></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin:16px 0 0"><span class="tag">进度规则</span>每关首次通关必得 ≥1 星（不惩罚），评级 3 星需达成挑战目标；满 7 星即刻解锁终章，未满也能继续玩任意关卡。<span class="tag" style="margin-left:10px">隐藏彩蛋</span>会逃跑的「不要」按钮、Konami 秘技、连点 10 次星星等 3 处，各奖励 1 枚成就徽章。</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>关键界面视觉稿（中保真 · 6 屏）</h2></div>
+  <p class="lead">以下为 600×375 设计画布的等比缩放稿，已带真实配色、材质与微动效，可点「放大看」查看细节。它定义视觉方向，不是最终成品；文案与照片位均为占位。</p>
+  <div class="scenes">
+
+    <!-- Scene 1 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 01 · 午夜剧场 / 开场<small>ACT 0 · 1440×900 全屏</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s1">
+          <div class="curtain-top"></div><div class="cur l"></div><div class="cur r"></div>
+          <div class="mote" style="left:31%;top:22%;width:8px;height:8px"></div>
+          <div class="mote" style="left:70%;top:30%;width:6px;height:6px;animation-delay:1.2s"></div>
+          <div class="mote" style="left:24%;top:64%;width:5px;height:5px;animation-delay:2.4s"></div>
+          <div class="mote" style="left:76%;top:72%;width:9px;height:9px;animation-delay:.8s"></div>
+          <div class="petal" style="left:36%;animation-delay:0s"></div><div class="petal" style="left:62%;animation-delay:3s"></div><div class="petal" style="left:48%;animation-delay:6s"></div>
+          <div class="clock"><div class="ticks"></div><div class="hand h"></div><div class="hand m"></div><div class="hand sec"></div><div class="dot"></div></div>
+          <div class="digi">11 : 59 : 57</div>
+          <div class="ttl">午 夜 剧 场</div>
+          <div class="sub-t">TONIGHT, THE STARS ARE WAITING FOR YOU</div>
+          <div class="cta"><button class="btn-s gold">拉开帷幕 →</button></div>
+          <div class="foot-s" style="color:#c9ae8d">幕布拉开后 → 4 位生日密码 / 邀请函</div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>氛围：</b>近黑径向渐变 + 底部暖橙烛光，红色条纹幕布左右对开，金色多重描边时钟。</li>
+        <li><b>交互：</b>5 秒倒数（可跳过）→ 幕布弹性拉开 + 金色光爆 → 淡入密码盘；错误时卡片轻摇 + 表情换图。</li>
+        <li><b>粒子：</b>烛光微粒 12 个、玫瑰花瓣 8 片、光标跟随小爱心，移动端自动减半。</li>
+      </ul>
+    </article>
+
+    <!-- Scene 2 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 02 · 愿望星图 / 主界面<small>HUB · 常驻进度与成就</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s2">
+          <div class="s2bg"></div>
+          <div class="hd"><span class="chip-s rose">◀ 返回剧场</span></div>
+          <div class="prog"><span class="chip-s gold" style="display:block;text-align:center">★ 3 / 7</span><div class="bar"><i></i></div></div>
+          <div class="title">愿 望 星 图<small>COLLECT ALL 7 WISH STARS</small></div>
+          <svg class="path" viewBox="0 0 528 190"><path d="M78 62 C140 150 160 140 190 138 S280 70 300 70 S410 155 440 155 S480 70 482 60" fill="none" stroke="#d98aa8" stroke-width="3" stroke-dasharray="9 9" stroke-linecap="round"/></svg>
+          <div class="node n1 done"><div><div class="ic">✨</div><div class="lb">抓星星</div></div><div class="st">✓</div></div>
+          <div class="node n2 open"><div><div class="ic">🕯️</div><div class="lb">吹蜡烛</div></div><div class="st">2</div></div>
+          <div class="node n3 done"><div><div class="ic">📸</div><div class="lb">翻牌</div></div><div class="st">✓</div></div>
+          <div class="node n4 lock"><div><div class="ic">🥚</div><div class="lb">扭蛋机</div></div><div class="st">🔒</div></div>
+          <div class="node n5 lock"><div><div class="ic">🧩</div><div class="lb">拼图</div></div><div class="st">🔒</div></div>
+          <div class="badges"><span>🏅 连击大师</span><span>🏅 一次通关</span><span class="egg">? ? ? 隐藏彩蛋</span></div>
+          <div class="foot-s" style="color:#a2586f">节点可任意顺序进入 · 已通关关卡可重玩刷星</div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>结构：</b>虚线手绘路径串起 5 个倾斜卡片节点，状态分「已通关 ✓ / 可进入（发光呼吸）/ 未解锁」。</li>
+        <li><b>进度：</b>右上 ★ x/7 + 渐变进度条；底部成就徽章条，隐藏徽章留 ??? 悬念。</li>
+        <li><b>复玩钩子：</b>每个节点显示历史最佳星级，点击「再玩一次」直接重开该关。</li>
+      </ul>
+    </article>
+
+    <!-- Scene 3 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 03 · 抓星星 / 反应关<small>GAME 1 · 限时 20 秒</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s3">
+          <div class="hd"><span class="chip-s rose">LEVEL 1 · 抓星星</span><span class="chip-s">×</span></div>
+          <div class="hud"><span>⏱ TIME <b>00:18</b></span><span>⭐ SCORE <b>240</b></span><span>🔥 COMBO <b>×4</b></span><span>目标 <b>10 / 12</b></span></div>
+          <div class="combo">COMBO ×4!</div>
+          <div class="star" style="left:74px;top:126px;animation-delay:.2s">★</div>
+          <div class="star" style="left:168px;top:206px;font-size:26px;animation-delay:1.1s">★</div>
+          <div class="star" style="left:428px;top:118px;font-size:42px;animation-delay:.6s">★</div>
+          <div class="star" style="left:494px;top:224px;font-size:28px;animation-delay:1.8s">★</div>
+          <div class="star" style="left:100px;top:256px;font-size:22px;animation-delay:2.3s">★</div>
+          <div class="ring"></div><div class="star big">★</div>
+          <div class="hint">20 秒内点击飘动的星星 · 连击不断分数翻倍 · 漏点会重置连击</div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>操作：</b>点击 / 触摸飘动星星，命中爆出小彩纸 + 分数浮字，连击数字弹性放大。</li>
+        <li><b>计分：</b>基础 10 分 × 连击系数；≥12 颗得 3 星，8~11 颗 2 星，通关即保底 1 星。</li>
+        <li><b>难度：</b>随时间推移星星变小、速度变快；结算页展示最佳纪录与「再来一次」。</li>
+      </ul>
+    </article>
+
+    <!-- Scene 4 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 04 · 吹蜡烛 / 许愿关<small>GAME 2 · 节奏 + 彩蛋</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s4">
+          <div class="hd"><span class="chip-s rose">LEVEL 2 · MAKE A WISH</span><span class="chip-s gold">🕯 4 / 7</span></div>
+          <div class="arch">～ MAKE A WISH ～</div>
+          <div class="mote" style="left:34%;top:34%;width:9px;height:9px"></div><div class="mote" style="left:66%;top:40%;width:7px;height:7px;animation-delay:1.4s"></div>
+          <div class="plate"></div><div class="cake"></div><div class="tier"></div>
+          <div class="candle off" style="left:244px;top:88px"><div class="flame"></div></div>
+          <div class="candle" style="left:272px;top:88px"><div class="flame"></div></div>
+          <div class="candle off" style="left:300px;top:88px"><div class="flame"></div></div>
+          <div class="candle" style="left:328px;top:88px"><div class="flame"></div></div>
+          <div class="candle off" style="left:356px;top:88px"><div class="flame"></div></div>
+          <div class="candle" style="left:208px;top:150px"><div class="flame"></div></div>
+          <div class="candle off" style="left:384px;top:150px"><div class="flame"></div></div>
+          <div class="mic"><b>🎤 吹气模式</b>对着麦克风呼气<br>或逐根点击蜡烛</div>
+          <div class="wish">按亮起顺序熄灭得 3 星 · 空格键可一次吹完全部</div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>双层玩法：</b>逐根点击熄灭；进阶「节奏模式」按蜡烛亮起顺序熄灭，错序不惩罚只降评级。</li>
+        <li><b>麦克风彩蛋：</b>授权后用音量阈值吹灭蜡烛（不授权自动降级为点击），火焰抖灭 + 一缕烟。</li>
+        <li><b>高潮：</b>7 根全灭 → 彩纸爆炸 + 金色横幅「愿望已送达」+ 生日歌音效（可静音）。</li>
+      </ul>
+    </article>
+
+    <!-- Scene 5 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 05 · 拍立得翻牌 / 记忆关<small>GAME 3 · 4×2 配对</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s5">
+          <div class="hd"><span class="chip-s rose">LEVEL 3 · 回忆翻翻看</span><span class="chip-s">步数 <b>06</b></span></div>
+          <div style="position:absolute;top:48px;left:0;right:0;text-align:center;font-family:'Chewy','PingFang SC',cursive;font-size:20px;color:#a3123f">找出成对的回忆 📸</div>
+          <div class="board">
+            <div class="pola hov"><div class="clip"></div><div class="ph"></div><div class="cap">our first trip</div></div>
+            <div class="pola back"><div class="clip"></div></div>
+            <div class="pola back"><div class="clip"></div></div>
+            <div class="pola back"><div class="clip"></div></div>
+            <div class="pola"><div class="clip"></div><div class="ph" style="background:linear-gradient(135deg,#ffe6bd,#f4a9a9 60%,#b28ac4)"></div><div class="cap">summer 2024</div></div>
+            <div class="pola back"><div class="clip"></div></div>
+            <div class="pola back"><div class="clip"></div></div>
+            <div class="pola back"><div class="clip"></div></div>
+          </div>
+          <div class="rate">配对 2 / 4　·　评级 ★★☆　·　最佳纪录 8 步</div>
+          <div class="foot-s" style="color:#a2586f">翻对一对得 1 颗星 · 步数越少评级越高 · 照片可换成你们的合照</div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>材质：</b>米色圆点手账纸底 + 白边拍立得 + 顶部木夹，翻牌用 3D rotateY 弹性翻转。</li>
+        <li><b>反馈：</b>配对成功两张卡同时发光并轻轻靠拢；失败摇晃后盖回，步数 +1 但不扣分。</li>
+        <li><b>个性化：</b>4 组照片位全部可替换，卡片下方 Great Vibes 手写注释可自定义。</li>
+      </ul>
+    </article>
+
+    <!-- Scene 6 -->
+    <article class="scene-card">
+      <div class="scene-top"><div class="t">SCENE 06 · 终章 / 生日信与纪念卡<small>FINALE · 满 7 星解锁</small></div><button class="zoom">放大看 ↗</button></div>
+      <div class="scene-frame"><div class="scene-canvas">
+        <div class="sc s6">
+          <div class="sky"></div><div class="rays"></div>
+          <div class="hd"><span class="chip-s gold">★ 7 / 7 · ALL STARS COLLECTED</span><span class="chip-s">×</span></div>
+          <div class="bow">🎀</div>
+          <div class="pola3d"><div class="ph"></div><div class="cap">the best day</div></div>
+          <div class="letter">
+            <h4>To my favourite person,</h4>
+            <p>又到了属于你的这一天。<br>谢谢你把平凡的日子<br>都变成值得收藏的瞬间。<span class="caret"></span></p>
+            <p style="margin-top:12px;font-family:'Great Vibes',cursive;font-size:20px;color:#7a3f92">Happy Birthday ♥</p>
+          </div>
+          <div class="confetti" style="left:12%;background:#ffd700;animation-delay:0s"></div>
+          <div class="confetti" style="left:30%;background:#ff7597;animation-delay:1.6s"></div>
+          <div class="confetti" style="left:52%;background:#7ee0d0;animation-delay:3.1s"></div>
+          <div class="confetti" style="left:74%;background:#fff;animation-delay:.9s"></div>
+          <div class="confetti" style="left:88%;background:#ffb300;animation-delay:2.4s"></div>
+          <div class="save"><button class="btn-s">↓ 保存我的生日纪念卡</button></div>
+        </div>
+      </div></div>
+      <ul class="notes">
+        <li><b>解锁瞬间：</b>7 颗星汇聚成光球 → 幕布再拉开一次 → 紫色信纸渐变入场 + 全屏彩纸。</li>
+        <li><b>情书：</b>Courier Prime 逐行打字机 + 闪烁光标，点击可立即显示全部；文案完全可配置。</li>
+        <li><b>带走的东西：</b>合成一张含昵称、日期、成绩星级与签名的纪念卡 PNG，可下载 / 分享。</li>
+      </ul>
+    </article>
+
+  </div>
+  <div class="callout">另有 2 屏在成品阶段补齐：<b>关卡 ④ 幸运扭蛋机</b>（拉杆掉出随机祝福券，收集图鉴 8/8）与 <b>关卡 ⑤ 照片拼图 + 手写签名</b>（拖拽 9 宫格 + Canvas 签名，签名写进纪念卡）。视觉语言与上方一致：格纹底、金色边框、圆润按钮、纸张倾角。</div>
+</section>
+
+<!-- 04 -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>玩法机制表：为什么「可玩性高」</h2></div>
+  <p class="lead">五个关卡覆盖五种不同操作类型（反应 / 节奏 / 记忆 / 随机 / 创造），避免重复；每关都有即时反馈、评级、纪录与重玩入口。</p>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th style="width:15%">关卡</th><th style="width:20%">核心操作</th><th style="width:25%">即时反馈</th><th style="width:20%">奖励 / 复玩点</th><th style="width:20%">优先级</th></tr></thead>
+      <tbody>
+        <tr><td><b>① 抓星星</b><br>反应 · 20s</td><td>点击 / 触摸飘动星星</td><td>爆裂粒子、分数浮字、连击数字弹性放大、剩余时间条</td><td>连击倍率、3 星评级、最佳分纪录、每日难度递增</td><td><span class="pill p-must">MVP</span></td></tr>
+        <tr><td><b>② 吹蜡烛</b><br>节奏 · 7 根</td><td>逐根点击 / 空格全吹 / 麦克风吹气</td><td>火焰抖灭 + 烟、渐亮金色横幅、彩纸爆炸、音效</td><td>节奏模式评级、麦克风彩蛋、许愿文案随机池</td><td><span class="pill p-must">MVP</span></td></tr>
+        <tr><td><b>③ 翻牌</b><br>记忆 · 4×2</td><td>翻牌配对 / 键盘方向键</td><td>3D 翻转、配对发光靠拢、失败轻摇、步数实时更新</td><td>步数评级、照片解锁图鉴、可换照片反复玩</td><td><span class="pill p-must">MVP</span></td></tr>
+        <tr><td><b>④ 扭蛋机</b><br>随机 · 收集</td><td>拉下拉杆 / 摇一摇手机</td><td>扭蛋滚落物理感、开壳动画、祝福券翻面</td><td>8 种祝福券图鉴、重复券可兑换 1 颗星、隐藏稀有券</td><td><span class="pill p-next">二期</span></td></tr>
+        <tr><td><b>⑤ 拼图+签名</b><br>创造 · 留念</td><td>拖拽 9 宫格 / Canvas 手写</td><td>碎片吸附、边缘发光、笔迹实时描画</td><td>生成含签名的专属纪念卡 PNG 下载</td><td><span class="pill p-next">二期</span></td></tr>
+        <tr><td><b>彩蛋 ×3</b><br>探索</td><td>会逃跑的「不要」按钮 / Konami 秘技 / 连点星星</td><td>按钮弹跳躲避、屏幕短暂变色、隐藏徽章弹出</td><td>成就徽章墙 3/3，解锁额外纪念卡贴纸</td><td><span class="pill p-fun">彩蛋</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid-3" style="margin-top:18px">
+    <div class="card"><h3 style="margin-top:0">不会卡住</h3><p style="font-size:12.5px;margin:0;color:#6f5f5b">无失败惩罚、无强制顺序、无次数限制；任意关卡首次通关保底 1 星，7 星目标可通过重复刷分达成。密码错误给提示而非阻断。</p></div>
+    <div class="card"><h3 style="margin-top:0">有得追</h3><p style="font-size:12.5px;margin:0;color:#6f5f5b">星级评级 + 最佳纪录 + 成就徽章 + 祝福券图鉴 + 纪念卡，四套收集目标叠加，localStorage 存档，隔天回来进度还在。</p></div>
+    <div class="card"><h3 style="margin-top:0">有惊喜</h3><p style="font-size:12.5px;margin:0;color:#6f5f5b">随机文案池、稀有扭蛋、隐藏彩蛋、麦克风吹气、剧情表情反应，重复进入也不会看到完全一样的一屏。</p></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>交互状态与动效规范</h2></div>
+  <p class="lead">统一的反馈语言，让 5 个小游戏看起来像同一个世界里的东西。</p>
+  <div class="spec">
+    <div><b>默认</b>卡片 2~6° 倾角、柔和投影、呼吸式浮动 3~6s</div>
+    <div><b>悬停 / 聚焦</b>上浮 6px、放大 1.04、金色描边亮起（触控端跳过）</div>
+    <div><b>按下</b>缩放 .96 + 轻微旋转，120ms 回弹</div>
+    <div><b>成功</b>粒子爆裂 + 分数浮字 + 星星飞向右上进度条</div>
+    <div><b>失误</b>左右轻摇 2 次 + 柔和红闪，不中断、不扣分</div>
+  </div>
+  <div class="grid-2" style="margin-top:18px">
+    <div class="card">
+      <h3 style="margin-top:0">键盘 / 无障碍</h3>
+      <ul class="clean" style="font-size:12.5px">
+        <li><span class="kbd">0-9</span> 密码输入　<span class="kbd">Enter</span> 确认 / 一次吹灭</li>
+        <li><span class="kbd">Space</span> 全吹蜡烛　<span class="kbd">← →</span> 翻牌选择 / 照片浏览</li>
+        <li><span class="kbd">Esc</span> 返回星图 / 关闭弹窗　<span class="kbd">M</span> 静音</li>
+        <li>触控热区 ≥ 44px；所有交互可纯键盘完成；<code>prefers-reduced-motion</code> 关闭粒子与摇摆；焦点可见描边。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">动效与音效 Token</h3>
+      <ul class="clean" style="font-size:12.5px">
+        <li>弹性缓动 <code>cubic-bezier(.34,1.56,.64,1)</code>，入场 320ms、反馈 160ms、转场 600ms</li>
+        <li>粒子三层：烛光微粒 12 / 花瓣 8 / 彩纸 60，移动端减半</li>
+        <li>音效由 Web Audio 实时合成（点击、命中、成功、翻牌），不依赖外部音频文件，默认静音需用户手势后开启</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>响应式与技术实现</h2></div>
+  <div class="grid-3">
+    <div class="card"><h3 style="margin-top:0">布局适配</h3><p style="font-size:12.5px;color:#6f5f5b">桌面 ≥1024：中心舞台 + 左右留白，粒子全量。平板 768~1024：缩小画布，星图节点改 3+2 换行。手机 &lt;768：单列竖屏、底部拇指区放主按钮、HUD 收成一行、禁止横向滚动、<code>100dvh</code> 适配刘海屏。</p></div>
+    <div class="card"><h3 style="margin-top:0">技术选型</h3><p style="font-size:12.5px;color:#6f5f5b">与参考站一致：<b>纯 HTML + CSS + 原生 JS</b>，零框架零构建。图形用内联 SVG / CSS 渐变，Canvas 仅用于彩纸、签名与纪念卡导出；进度存 localStorage；字体走 Google Fonts 并有系统字体兜底；单文件即可部署。</p></div>
+    <div class="card"><h3 style="margin-top:0">文件结构（建议）</h3><p style="font-size:12px;color:#6f5f5b;font-family:'Courier Prime',monospace;line-height:1.9">index.html<br>style.css（含 :root 设计变量）<br>script.js（状态机 + 5 个关卡模块）<br>assets/ 照片 · 表情图<br>config.js（昵称/密码/文案/照片/日期 全部集中配置）</p></div>
+  </div>
+  <h3>交付分期建议</h3>
+  <div class="card">
+    <div class="two-col">
+      <p><b>第一轮 · 可玩骨架（MVP）</b><br>开幕倒计时与幕布 → 星图 HUB → 关卡 ①②③ → 星级/进度/localStorage → 终章打字机情书。此时整条链路已可完整通关，可先在真机上跑一遍节奏。</p>
+      <p><b>第二轮 · 可玩性加厚</b><br>关卡 ④ 扭蛋、⑤ 拼图签名、成就徽章、3 处彩蛋、纪念卡导出、Web Audio 音效与音乐开关。</p>
+      <p><b>第三轮 · 个性化与打磨</b><br>替换真实照片与文案、生日主角昵称、特殊日期、表情素材；移动端逐屏走查、动效降级、性能与首屏加载优化；最后发布成可分享链接。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>需要你确认的 6 件事</h2></div>
+  <div class="card">
+    <div class="two-col">
+      <ul class="clean">
+        <li><b>主角昵称与生日日期</b>：用于标题、密码提示与纪念卡落款</li>
+        <li><b>4 位开场密码</b>：生日年份 / 纪念日，或干脆去掉密码直接拆邀请函</li>
+        <li><b>照片素材</b>：翻牌与拍立得共需 6~10 张，没准备时先用风格化占位图</li>
+        <li><b>情书文案</b>：终章打字机内容，可分 3~4 段</li>
+      </ul>
+      <ul class="clean">
+        <li><b>风格取舍</b>：是否保留参考站的蜡笔小新元素？这版草稿用了通用的星星/蛋糕/拍立得，规避版权形象</li>
+        <li><b>范围与交付</b>：先做 MVP 三关还是五关全上；是否需要背景音乐、分享链接、下载纪念卡</li>
+        <li><b>玩法偏好</b>：偏「轻松治愈」还是「有挑战计分」？可调整计时压力与评级门槛</li>
+        <li><b>验证方式</b>：按你习惯的分轮迭代，每轮改动后我会给可预览链接，你在真机上过一遍再提下一轮</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  生日星球 · 网页设计草稿 v0.1 · 2026-11-07　|　视觉风格参考：<a href="https://github.com/saklincodes/Secret-Birthday-Gift" target="_blank">saklincodes/Secret-Birthday-Gift</a>（舞台剧叙事、格纹手账、拍立得、烛光粒子）<br>
+  本稿仅定义视觉与玩法方向，画面中的照片、昵称、文案均为占位内容。
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" id="lbClose" aria-label="关闭">×</button>
+  <div class="lb-frame scene-frame" id="lbFrame"></div>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+(function(){
+  // 600x375 设计画布等比适配容器
+  function fit(frame){
+    var canvas = frame.querySelector('.scene-canvas');
+    if(!canvas) return;
+    frame.style.setProperty('--scale', frame.clientWidth / 600);
+  }
+  function fitAll(){ document.querySelectorAll('.scene-frame').forEach(fit); }
+  fitAll();
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(function(entries){ entries.forEach(function(e){ fit(e.target); }); });
+    document.querySelectorAll('.scene-frame').forEach(function(f){ ro.observe(f); });
+  }else{
+    window.addEventListener('resize', fitAll);
+  }
+
+  // 放大查看
+  var lb = document.getElementById('lightbox');
+  var lbFrame = document.getElementById('lbFrame');
+  var lbCap = document.getElementById('lbCap');
+  document.querySelectorAll('.scene-card').forEach(function(card){
+    var btn = card.querySelector('.zoom');
+    btn.addEventListener('click', function(){
+      var src = card.querySelector('.scene-canvas');
+      lbFrame.innerHTML = '';
+      var clone = src.cloneNode(true);
+      clone.style.removeProperty('--scale');
+      lbFrame.appendChild(clone);
+      lbCap.textContent = card.querySelector('.t').childNodes[0].textContent.trim();
+      lb.hidden = false;
+      fit(lbFrame);
+    });
+  });
+  function close(){ lb.hidden = true; lbFrame.innerHTML = ''; }
+  document.getElementById('lbClose').addEventListener('click', close);
+  lb.addEventListener('click', function(e){ if(e.target === lb) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !lb.hidden) close(); });
+})();
+</script>
+</body>
+</html>

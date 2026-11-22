@@ -1,0 +1,112 @@
+{
+ "collage/hero.jpg": {
+  "size": [
+   1200,
+   1200
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 225
+ },
+ "collage/bunting.jpg": {
+  "size": [
+   1100,
+   1100
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 31
+ },
+ "collage/happy.jpg": {
+  "size": [
+   900,
+   900
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 38
+ },
+ "collage/number22.jpg": {
+  "size": [
+   900,
+   900
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 65
+ },
+ "collage/hat.jpg": {
+  "size": [
+   700,
+   700
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 20
+ },
+ "collage/cake.jpg": {
+  "size": [
+   900,
+   900
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 102
+ },
+ "collage/portrait.jpg": {
+  "size": [
+   900,
+   900
+  ],
+  "orig": [
+   1536,
+   1536
+  ],
+  "kb": 57
+ },
+ "letter/page1.jpg": {
+  "size": [
+   1126,
+   1500
+  ],
+  "orig": [
+   3472,
+   4624
+  ],
+  "kb": 244
+ },
+ "letter/page2.jpg": {
+  "size": [
+   1126,
+   1500
+  ],
+  "orig": [
+   3472,
+   4624
+  ],
+  "kb": 232
+ },
+ "collage/reference.jpg": {
+  "size": [
+   590,
+   344
+  ],
+  "orig": [
+   590,
+   344
+  ],
+  "kb": 36
+ }
+}
